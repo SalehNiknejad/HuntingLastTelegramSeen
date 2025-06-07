@@ -117,7 +117,24 @@ You can:
 ```
 
 ---
+## ⚙️ Customizing the Font
 
+You can change the font used in the Streamlit app by editing the configuration file located in the `.streamlit` folder, typically `.streamlit/config.toml`.
+
+By default, the app uses the **Vazir** font (a popular Persian font). To use this font correctly, make sure you have it installed on your system. If not, you can download it from [this link](https://github.com/rastikerdar/vazir-font).
+
+To change the font, open `.streamlit/config.toml` and modify or add the following line under the `[theme]` section:
+
+```toml
+[theme]
+font = "Your Desired Font Name"
+````
+
+Replace `"Your Desired Font Name"` with the exact name of the font installed on your system.
+
+After saving changes, restart the Streamlit app to see the new font applied.
+
+---
 ## 🛡 Security
 
 - `.env` is in `.gitignore` to protect secrets.
