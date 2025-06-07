@@ -10,7 +10,7 @@ load_dotenv()
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
 target_chat_id = os.getenv("TARGET_CHAT_ID")
-check_interval = 4
+check_interval = 8
 
 status_translations = {
     "UserStatusOnline": "✅ آنلاین",
@@ -25,7 +25,6 @@ client = TelegramClient('session_check', api_id, api_hash)
 user_status_map = {}
 log = []
 
-# خواندن لاگ قبلی در صورت وجود
 if os.path.exists("status_log.json"):
     with open("status_log.json", "r", encoding="utf-8") as f:
         try:
