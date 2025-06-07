@@ -78,14 +78,14 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.download_button(
-        label="💾 خروجی TXT",
+        label="گزارش TXT دانلود فایل 💾",
         data=txt_data,
         file_name=f"{user_alias}_status_log.txt",
         mime="text/plain",
     )
 
 with col2:
-    if st.button("🗑️ پاک کردن کل لاگ‌ها"):
+    if st.button(type="primary" , label=" پاک کردن کل لاگ‌ها 🗑️"):
         with open("status_log.json", "w", encoding="utf-8") as f:
             f.write("[]")
         st.success("تمام لاگ‌ها پاک شدند. لطفاً صفحه را دوباره بارگذاری کنید.")
