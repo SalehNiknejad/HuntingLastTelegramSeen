@@ -15,6 +15,11 @@ status_translations = {
 with open("status_log.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
+if not data:
+    st.title("📊 Telegram Last Seen Monitor")
+    st.warning("👓 هیچ دیتایی برای نمایش وجود ندارد. منتظر ثبت لاگ ها باشید")
+    st.stop()
+
 df = pd.DataFrame(data)
 df["time"] = pd.to_datetime(df["time"])
 df["translated_status"] = df["status"].map(status_translations)
@@ -64,7 +69,6 @@ fig.update_layout(
 
 st.plotly_chart(fig)
 
-
 st.subheader("📋 جدول کامل وضعیت‌ها")
 st.dataframe(user_df[["time", "translated_status"]].rename(columns={"translated_status": "وضعیت"}))
 user_df_filtered = user_df[["time", "translated_status"]].rename(columns={"translated_status": "وضعیت"})
@@ -74,20 +78,17 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.download_button(
-    label="💾 خروجی TXT",
-    data=txt_data,
-    file_name=f"{user_alias}_status_log.txt",
-    mime="text/plain",
+        label="💾 خروجی TXT",
+        data=txt_data,
+        file_name=f"{user_alias}_status_log.txt",
+        mime="text/plain",
     )
-    
+
 with col2:
     if st.button("🗑️ پاک کردن کل لاگ‌ها"):
         with open("status_log.json", "w", encoding="utf-8") as f:
             f.write("[]")
         st.success("تمام لاگ‌ها پاک شدند. لطفاً صفحه را دوباره بارگذاری کنید.")
 
-
 st.subheader("📊 آمار وضعیت‌ها")
 st.write(user_df["translated_status"].value_counts())
-
-
