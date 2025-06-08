@@ -10,8 +10,8 @@ load_dotenv()
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
 target_chat_id = os.getenv("TARGET_CHAT_ID")
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 check_interval = 8
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 
 status_translations = {
     "UserStatusOnline": "✅ آنلاین",
@@ -77,7 +77,7 @@ async def detect_lastsin_multi():
                         "time": now,
                         "username": user.username if user.username else str(user.id),
                         "alias": alias,
-                        "status": status_name 
+                        "status": status_name
                     }
                     log.append(log_entry)
 
@@ -86,10 +86,35 @@ async def detect_lastsin_multi():
 
                     message = f"🕵️‍♂️ وضعیت جدید برای {alias}:\n\n🕒 {now}\n📶 {translated_status}"
                     await client.send_message(target_chat_id, message, silent=u.get("silent", False))
+
             except Exception as e:
                 print(f"❗ خطا در بررسی {u.get('alias', '?')}: {e}")
-                
+
         await asyncio.sleep(check_interval)
 
-with client:
-    client.loop.run_until_complete(detect_lastsin_multi())
+
+@client.on(events.NewMessage())
+async def command_handler(event):
+    sender = await event.get_sender()
+    if sender.username != ADMIN_USERNAME:
+        return
+
+    text = event.raw_text.strip()
+
+    if text.lower() == "start":
+        if running_event.is_set():
+            await event.reply("⚠️ ربات قبلاً فعال است.")
+        else:
+            running_event.set()
+            await event.reply("🚀 ربات شروع به کار کرد.")
+    else:
+        await event.reply("❓ دستور شناخته نشده است.")
+
+async def main():
+    await client.start()
+    asyncio.create_task(detect_lastsin_multi())
+    print("🤖 ربات اجرا شد و در حال گوش دادن به دستورات...")
+    await client.run_until_disconnected()
+
+if __name__ == "__main__":
+    asyncio.run(main())
