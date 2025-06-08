@@ -244,6 +244,50 @@ async def command_handler(event):
 
         await event.reply(f"✅ کاربر جدید با نام مستعار `{alias}` و شناسه `{user_id}` اضافه شد.")
 
+    elif text.lower().startswith("info"):
+        parts = text.split()
+        if len(parts) != 2:
+            await event.reply("❌ فرمت دستور اشتباه است.\n\nفرمت صحیح:\ninfo شماره_کاربر")
+            return
+
+        try:
+            index = int(parts[1]) - 1
+        except ValueError:
+            await event.reply("❌ شماره کاربر باید عدد باشد.")
+            return
+
+        if index < 0 or index >= len(users_to_monitor):
+            await event.reply("⚠️ شماره کاربر نامعتبر است.")
+            return
+
+        user = users_to_monitor[index]
+
+        alias = user.get("alias", "بی‌نام")
+        username_or_id = user.get("username", "نامشخص")
+        silent_mode = user.get("silent", False)
+
+        try:
+            entity = await client.get_entity(username_or_id)
+            uname = entity.username if entity.username else str(username_or_id)
+            display_name = f"@{uname}" if entity.username else uname
+
+            user_obj = await client.get_entity(entity.id)
+            status = user_obj.status
+            status_name = status.__class__.__name__ if status else "UserStatusEmpty"
+            translated_status = status_translations.get(status_name, status_name)
+        except Exception as e:
+            display_name = str(username_or_id)
+            translated_status = "⛔ اطلاعات وضعیت قابل دریافت نیست"
+
+        info_message = (
+            f"👤 اطلاعات کاربر شماره {index+1}:\n"
+            f"نام مستعار: {alias}\n"
+            f"شناسه/یوزرنیم: {display_name}\n"
+            f"حالت سکوت: {'✅ فعال' if silent_mode else '❌ غیرفعال'}\n"
+            f"وضعیت فعلی: {translated_status}"
+        )
+
+        await event.reply(info_message)
 
     else:
         await event.reply("❓ دستور شناخته نشده است.")
