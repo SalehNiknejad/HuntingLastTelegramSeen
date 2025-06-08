@@ -53,7 +53,7 @@ async def detect_lastsin_multi():
 
     while True:
         await running_event.wait()
-        
+
         if not client.is_connected():
             print("🔌 کلاینت قطع شده، اتصال مجدد...")
             await client.connect()
@@ -66,7 +66,7 @@ async def detect_lastsin_multi():
                 user = await client.get_entity(entity.id)
                 status = user.status
 
-                if status and status != user_status_map[entity.id]:
+                if status and status != user_status_map.get(entity.id):
                     user_status_map[entity.id] = status
                     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -85,11 +85,10 @@ async def detect_lastsin_multi():
                         json.dump(log, f, indent=2, ensure_ascii=False)
 
                     message = f"🕵️‍♂️ وضعیت جدید برای {alias}:\n\n🕒 {now}\n📶 {translated_status}"
-                    await client.send_message(target_chat_id, message, silent=u["silent"])
-
+                    await client.send_message(target_chat_id, message, silent=u.get("silent", False))
             except Exception as e:
-                print(f"❗ خطا در بررسی {u['alias']}: {e}")
-
+                print(f"❗ خطا در بررسی {u.get('alias', '?')}: {e}")
+                
         await asyncio.sleep(check_interval)
 
 with client:
