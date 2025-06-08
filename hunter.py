@@ -107,6 +107,14 @@ async def command_handler(event):
         else:
             running_event.set()
             await event.reply("🚀 ربات شروع به کار کرد.")
+
+    elif text.lower() == "stop":
+        if not running_event.is_set():
+            await event.reply("⚠️ ربات قبلاً متوقف شده است.")
+        else:
+            running_event.clear()
+            await event.reply("🛑 ربات متوقف شد.")
+
     else:
         await event.reply("❓ دستور شناخته نشده است.")
 
