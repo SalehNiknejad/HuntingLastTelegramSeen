@@ -129,7 +129,38 @@ async def command_handler(event):
             await event.reply("🗑️ فایل لاگ پاک شد.")
         else:
             await event.reply("⚠️ فایل لاگ وجود ندارد.")
-            
+
+    elif text.lower() == "status":
+        status_text = "🚀 ربات فعال است." if running_event.is_set() else "⏸️ ربات متوقف شده است."
+        status_text += f"\n⏲️ بازه بررسی وضعیت: {check_interval} ثانیه"
+        await event.reply(status_text)
+
+    elif text.lower() == "users":
+        if users_to_monitor:
+            message_lines = ["👥 لیست کاربران تحت نظر:"]
+            for i, user in enumerate(users_to_monitor, 1):
+                alias = user.get("alias", "بی‌نام")
+                username_or_id = user.get("username", "نامشخص")
+
+                display_name = ""
+                try:
+                    if isinstance(username_or_id, int):
+                        entity = await client.get_entity(username_or_id)
+                        uname = entity.username if entity.username else str(username_or_id)
+                        display_name = f"@{uname}" if entity.username else uname
+                    else:
+                        display_name = f"@{username_or_id}"
+                except:
+                    display_name = str(username_or_id)
+
+                message_lines.append(f"🔸 {i}. {alias} ({display_name})")
+
+            message = "\n".join(message_lines)
+            await event.reply(message)
+        else:
+            await event.reply("⚠️ لیست کاربران خالی است.")
+
+
     else:
         await event.reply("❓ دستور شناخته نشده است.")
 
