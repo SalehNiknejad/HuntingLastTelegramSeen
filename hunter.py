@@ -115,6 +115,12 @@ async def command_handler(event):
             running_event.clear()
             await event.reply("🛑 ربات متوقف شد.")
 
+    elif text.lower() == "log":
+        if os.path.exists("status_log.json"):
+            await client.send_file(event.chat_id, "status_log.json", caption="📂 فایل لاگ وضعیت‌ها")
+        else:
+            await event.reply("⚠️ فایل لاگ پیدا نشد.")
+
     else:
         await event.reply("❓ دستور شناخته نشده است.")
 
