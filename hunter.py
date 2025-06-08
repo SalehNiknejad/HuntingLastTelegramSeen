@@ -160,6 +160,59 @@ async def command_handler(event):
         else:
             await event.reply("⚠️ لیست کاربران خالی است.")
 
+    elif text.lower().startswith("adduser"):
+        parts = text.split()
+        if len(parts) < 3:
+            await event.reply("❌ فرمت دستور اشتباه است.\n\nفرمت صحیح:\nadduser alias username_or_id")
+            return
+
+        username_or_id = parts[-1]
+        alias = " ".join(parts[1:-1])
+
+        if username_or_id.startswith("@"):
+            username_or_id = username_or_id[1:]
+
+        user_id = None
+        try:
+            user_id = int(username_or_id)
+        except ValueError:
+            try:
+                entity = await client.get_entity(username_or_id)
+                user_id = entity.id
+            except Exception as e:
+                await event.reply(f"❌ یوزرنیم `{username_or_id}` معتبر نیست یا پیدا نشد.\nخطا: {e}")
+                return
+
+        if any(u["username"] == user_id for u in users_to_monitor):
+            await event.reply(f"⚠️ کاربر با شناسه `{user_id}` قبلاً در لیست وجود دارد.")
+            return
+
+        new_user = {
+            "alias": alias,
+            "username": user_id,
+            "silent": False
+        }
+        users_to_monitor.append(new_user)
+
+        users_to_save = []
+        for u in users_to_monitor:
+            user_copy = u.copy()
+            if "entity" in user_copy:
+                del user_copy["entity"]
+            users_to_save.append(user_copy)
+
+        with open("users.json", "w", encoding="utf-8") as f:
+            json.dump(users_to_save, f, indent=2, ensure_ascii=False)
+
+        try:
+            entity = await client.get_entity(user_id)
+            new_user["entity"] = entity
+            user_status_map[entity.id] = None
+        except Exception as e:
+            print(f"❗ خطا در بارگذاری entity جدید: {e}")
+
+        await event.reply(f"✅ کاربر جدید با نام مستعار `{alias}` و شناسه `{user_id}` اضافه شد.")
+
 
     else:
         await event.reply("❓ دستور شناخته نشده است.")
