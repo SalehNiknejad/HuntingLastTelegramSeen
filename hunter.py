@@ -36,6 +36,9 @@ if os.path.exists("status_log.json"):
 with open("users.json", "r", encoding="utf-8") as f:
     users_to_monitor = json.load(f)
 
+running_event = asyncio.Event()
+running_event.set()
+
 async def detect_lastsin_multi():
     await client.start()
 
