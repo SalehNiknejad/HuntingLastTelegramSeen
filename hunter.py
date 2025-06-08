@@ -160,6 +160,37 @@ async def command_handler(event):
         else:
             await event.reply("⚠️ لیست کاربران خالی است.")
 
+    elif text.lower().startswith("deluser"):
+        parts = text.split()
+        if len(parts) != 2:
+            await event.reply("❌ فرمت دستور اشتباه است.\n\nفرمت صحیح:\ndeluser شماره_کاربر")
+            return
+
+        try:
+            index = int(parts[1]) - 1
+        except ValueError:
+            await event.reply("❌ شماره کاربر باید عدد باشد.")
+            return
+
+        if index < 0 or index >= len(users_to_monitor):
+            await event.reply("⚠️ شماره کاربر نامعتبر است.")
+            return
+
+        removed_user = users_to_monitor.pop(index)
+
+        users_to_save = []
+        for u in users_to_monitor:
+            user_copy = u.copy()
+            if "entity" in user_copy:
+                del user_copy["entity"]
+            users_to_save.append(user_copy)
+
+        with open("users.json", "w", encoding="utf-8") as f:
+            json.dump(users_to_save, f, indent=2, ensure_ascii=False)
+
+        await event.reply(f"✅ کاربر `{removed_user.get('alias', 'بی‌نام')}` با شماره {index+1} حذف شد.")
+
+
     elif text.lower().startswith("adduser"):
         parts = text.split()
         if len(parts) < 3:
