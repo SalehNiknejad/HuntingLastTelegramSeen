@@ -121,6 +121,15 @@ async def command_handler(event):
         else:
             await event.reply("⚠️ فایل لاگ پیدا نشد.")
 
+    elif text.lower() == "clearlog":
+        if os.path.exists("status_log.json"):
+            with open("status_log.json", "w", encoding="utf-8") as f:
+                f.write("[]")
+            log.clear()
+            await event.reply("🗑️ فایل لاگ پاک شد.")
+        else:
+            await event.reply("⚠️ فایل لاگ وجود ندارد.")
+            
     else:
         await event.reply("❓ دستور شناخته نشده است.")
 
