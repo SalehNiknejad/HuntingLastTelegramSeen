@@ -30,6 +30,9 @@ A Python-based toolset that monitors the **online status (Last Seen)** of specif
 - 💾 Export logs as `.txt` file
 - 🧹 One-click to clear all logs
 
+![image](https://github.com/user-attachments/assets/33006c5d-b1e8-4d47-9e7f-77aa8ae0d96c)
+![image](https://github.com/user-attachments/assets/3e74187a-5ffd-4254-8f2b-6b796a331ad6)
+
 ---
 
 ## 📦 Requirements
