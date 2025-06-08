@@ -7,14 +7,22 @@ A Python-based toolset that monitors the **online status (Last Seen)** of specif
 ## 🚀 Features
 
 ### 🤖 Telegram Bot (`hunter.py`)
+
 - 🔍 Monitors multiple Telegram users using Telethon
 - 🔔 Sends live status updates (online/offline) to a group or channel
-- 😶 Supports silent mode per user (no notification)
+- 🕹️ Start/Stop the bot remotely via Telegram commands
+- ➕ Add/remove users dynamically via Telegram
+- 🔇 Supports silent mode per user (no notification)
 - 🏷️ Allows assigning aliases for clarity
+- ⏱️ `setinterval` to change check frequency (in seconds)
+- 🔁 `status` to check current bot status (running/stopped + interval)
+- 🧹 `clearlog` to wipe log file instantly from Telegram
+- ℹ️ `info` to see latest status of all tracked users
 - 📝 Logs all status changes to `status_log.json`
 - 🔒 Uses `.env` and `users.json` for safe config management
 
 ### 📊 Streamlit Dashboard (`dashboard.py`)
+
 - 📈 Real-time charts of status changes over time
 - 🕒 Shows most recent status & timestamp
 - 📋 Interactive full table of logs
@@ -56,6 +64,7 @@ Create a `.env` file based on the provided template:
 API_ID=your_api_id
 API_HASH=your_api_hash
 TARGET_CHAT_ID=@your_channel_or_group
+ADMIN_USERNAME=your_telegram_username_without_@
 ```
 
 Create a `users.json` file using `users.example.json`:
@@ -78,6 +87,26 @@ python hunter.py
 
 ---
 
+## 💬 Available Bot Commands
+
+All commands are sent via Telegram messages to the bot (only by admin):
+
+| Command                        | Description                                 |
+| ------------------------------ | ------------------------------------------- |
+| `start`                        | Start the monitoring loop                   |
+| `stop`                         | Pause monitoring                            |
+| `log`                          | Get the full status log file                |
+| `users`                        | See current user list with aliases          |
+| `adduser alias username_or_id` | Add a new user to track                     |
+| `deluser index`                | Remove user by index (from `users` list)    |
+| `status`                       | Get bot running status and current interval |
+| `setinterval N`                | Change interval to N seconds                |
+| `clearlog`                     | Deletes `status_log.json` content           |
+| `info`                         | Shows current status of all tracked users   |
+| `help`                         | Displays help and usage guide               |
+
+---
+
 ## 📊 Dashboard Usage
 
 To visualize the logs, run the Streamlit dashboard:
@@ -87,6 +116,7 @@ streamlit run dashboard.py
 ```
 
 You can:
+
 - Select a user alias to filter
 - See latest status and full chart
 - Export logs to `.txt`
@@ -105,19 +135,28 @@ You can:
     "time": "2025-06-07T10:20:15",
     "username": "AliA1",
     "alias": "Ali",
-    "status": "UserStatusOnline",
+    "status": "UserStatusOnline"
   },
   {
-    "alias": "Ali",
+    "time": "2025-06-07T10:24:10",
     "username": "AliA1",
-    "status": "UserStatusOffline",
-    "time": "2025-06-07T10:24:10"
+    "alias": "Ali",
+    "status": "UserStatusOffline"
   }
 ]
 ```
 
 ---
-## ⚙️ Customizing the Font
+
+## 🛡 Security
+
+- `.env` is in `.gitignore` to protect secrets.
+- Share only `.env.example` and `users.example.json` with others.
+- Never expose your API credentials.
+
+---
+
+## 🖋 Font Customization (Dashboard)
 
 You can change the font used in the Streamlit app by editing the configuration file located in the `.streamlit` folder, typically `.streamlit/config.toml`.
 
@@ -128,15 +167,8 @@ To change the font, open `.streamlit/config.toml` and modify or add the followin
 ```toml
 [theme]
 font = "Your Desired Font Name"
-````
+```
 
 Replace `"Your Desired Font Name"` with the exact name of the font installed on your system.
 
 After saving changes, restart the Streamlit app to see the new font applied.
-
----
-## 🛡 Security
-
-- `.env` is in `.gitignore` to protect secrets.
-- Share only `.env.example` and `users.example.json` with others.
-- Never expose your API credentials.
