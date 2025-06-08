@@ -43,11 +43,17 @@ async def detect_lastsin_multi():
     await client.start()
 
     for u in users_to_monitor:
-        entity = await client.get_entity(u["username"])
-        u["entity"] = entity
-        user_status_map[entity.id] = None
+        try:
+            username_or_id = u["username"]
+            entity = await client.get_entity(username_or_id)
+            u["entity"] = entity
+            user_status_map.setdefault(entity.id, None)
+        except Exception as e:
+            print(f"❗ خطا در بارگذاری entity برای {u.get('alias', '?')}: {e}")
 
     while True:
+        await running_event.wait()
+        
         if not client.is_connected():
             print("🔌 کلاینت قطع شده، اتصال مجدد...")
             await client.connect()
