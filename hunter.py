@@ -1,4 +1,4 @@
-from telethon.sync import TelegramClient
+from telethon import TelegramClient, events
 import asyncio
 import json
 from datetime import datetime
@@ -10,6 +10,7 @@ load_dotenv()
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
 target_chat_id = os.getenv("TARGET_CHAT_ID")
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 check_interval = 8
 
 status_translations = {
