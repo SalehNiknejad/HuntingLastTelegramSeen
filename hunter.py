@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+from utils import parse_status_log_file
 
 load_dotenv()
 
@@ -190,7 +191,10 @@ async def command_handler(event):
 
         await event.reply(f"✅ کاربر `{removed_user.get('alias', 'بی‌نام')}` با شماره {index+1} حذف شد.")
 
-
+    elif text.lower().startswith("report"):
+        report = parse_status_log_file()
+        await event.respond(report)
+            
     elif text.lower().startswith("adduser"):
         parts = text.split()
         if len(parts) < 3:
