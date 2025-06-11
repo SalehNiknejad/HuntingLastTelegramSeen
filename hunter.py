@@ -314,10 +314,20 @@ async def command_handler(event):
         await event.reply("❓ دستور شناخته نشده است.")
 
 async def main():
-    await client.start()
-    asyncio.create_task(detect_lastsin_multi())
-    print("🤖 ربات اجرا شد و در حال گوش دادن به دستورات...")
-    await client.run_until_disconnected()
+    while True:
+        try:
+            await client.start()
+            await client.send_message(ADMIN_USERNAME , "🤖 ربات با موفقیت راه‌اندازی شد و آماده اجراست.")
+            asyncio.create_task(detect_lastsin_multi())
+            print("🤖 ربات اجرا شد و در حال گوش دادن به دستورات...")
+            await client.run_until_disconnected()
+        except Exception as e:
+            print(f"❗ خطا در اجرای اصلی: {e}")
+            try:
+                await client.send_message(ADMIN_USERNAME, f"❌ خطا در اجرای ربات:\n{e}\n⏳ تلاش برای اجرای مجدد پس از ۱ ساعت...")
+            except:
+                print("⚠️ ارسال پیام به ادمین ناموفق بود.")
+            await asyncio.sleep(3600)
 
 if __name__ == "__main__":
     asyncio.run(main())
