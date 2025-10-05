@@ -14,14 +14,7 @@ target_chat_id = os.getenv("TARGET_CHAT_ID")
 check_interval = 8
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 
-status_translations = {
-    "UserStatusOnline": "✅ آنلاین",
-    "UserStatusOffline": "🔻 آفلاین",
-    "UserStatusRecently": "🕒 اخیراً آنلاین",
-    "UserStatusLastWeek": "📅 آخرین بازدید در هفته گذشته",
-    "UserStatusLastMonth": "📆 آخرین بازدید در ماه گذشته",
-    "UserStatusEmpty": "⛔ بدون اطلاعات وضعیت"
-}
+
 
 client = TelegramClient('session_check', api_id, api_hash)
 user_status_map = {}
